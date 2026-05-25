@@ -164,7 +164,7 @@ Each mart is built in **two implementations** — Python (pandas) and SQL (DuckD
 
 ### 1. Clone the repository
 ```bash
-git clone https://github.com/your-username/superstore-analysis.git
+git clone https://github.com/AugustoTonelli14/superstore-analysis.git
 cd superstore-analysis
 ```
 
