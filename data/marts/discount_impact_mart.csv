@@ -1,0 +1,13 @@
+discount_band,Category,total_sales,total_profit,orders,loss_orders,avg_discount,profit_margin_pct,loss_rate_pct
+High (30%+),Furniture,195150.74,-54477.76,475,527.0,0.4253,-27.92,110.95
+High (30%+),Office Supplies,39523.15,-47140.14,573,680.0,0.7441,-119.27,118.67
+High (30%+),Technology,128096.26,-33758.16,152,141.0,0.4444,-26.35,92.76
+Low (1-19%),Furniture,74192.77,8530.0,122,21.0,0.1203,11.5,17.21
+Low (1-19%),Office Supplies,4324.15,1086.08,16,0.0,0.1,25.12,0.0
+Low (1-19%),Technology,3410.96,832.08,2,0.0,0.1,24.39,0.0
+Medium (20-29%),Furniture,216631.02,6265.95,539,166.0,0.2,2.89,30.8
+Medium (20-29%),Office Supplies,233049.74,38038.75,1661,206.0,0.2,16.32,12.4
+Medium (20-29%),Technology,314913.62,46032.61,744,130.0,0.2,14.62,17.47
+No Discount,Furniture,256025.27,58133.08,739,0.0,0.0,22.71,0.0
+No Discount,Office Supplies,442150.0,130506.11,2020,0.0,0.0,29.52,0.0
+No Discount,Technology,389733.2,132348.42,718,0.0,0.0,33.96,0.0
