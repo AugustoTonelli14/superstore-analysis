@@ -14,10 +14,11 @@ Features created:
 Each feature is documented with its business rationale.
 """
 
-import pandas as pd
-import numpy as np
-from pathlib import Path
 import logging
+from pathlib import Path
+
+import numpy as np
+import pandas as pd
 
 logger = logging.getLogger(__name__)
 
@@ -149,8 +150,8 @@ def engineer_features(df: pd.DataFrame) -> pd.DataFrame:
 if __name__ == "__main__":
     import sys
     sys.path.insert(0, str(Path(__file__).resolve().parent))
-    from ingestion import ingest
     from cleaning import clean
+    from ingestion import ingest
     from transformation import transform
 
     raw        = ingest()

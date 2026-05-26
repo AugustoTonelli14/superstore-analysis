@@ -4,8 +4,8 @@ Provides sample DataFrames that mirror the Superstore schema at each
 pipeline stage, so tests run fast without touching disk.
 """
 
-import pandas as pd
 import numpy as np
+import pandas as pd
 import pytest
 
 

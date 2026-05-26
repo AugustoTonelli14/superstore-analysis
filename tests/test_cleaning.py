@@ -1,18 +1,18 @@
 """Tests for the cleaning module — deduplication, date parsing, validation."""
 
-import pytest
-import pandas as pd
 import sys
 from pathlib import Path
 
+import pandas as pd
+
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent / "src"))
 from cleaning import (
-    remove_duplicates,
+    check_duplicates,
+    check_missing_values,
     parse_dates,
+    remove_duplicates,
     standardise_strings,
     validate_numeric_ranges,
-    check_missing_values,
-    check_duplicates,
 )
 
 

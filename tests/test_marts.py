@@ -1,18 +1,18 @@
 """Tests for data mart construction — schema and aggregation integrity."""
 
-import pytest
-import pandas as pd
 import sys
 from pathlib import Path
 
+import pandas as pd
+
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent / "src"))
 from marts import (
-    build_sales_performance_mart,
-    build_profitability_mart,
-    build_customer_segment_mart,
-    build_regional_performance_mart,
-    build_discount_impact_mart,
     build_all_marts,
+    build_customer_segment_mart,
+    build_discount_impact_mart,
+    build_profitability_mart,
+    build_regional_performance_mart,
+    build_sales_performance_mart,
 )
 
 

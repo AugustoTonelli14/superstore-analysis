@@ -12,9 +12,10 @@ Marts produced:
   5. discount_impact_mart     – Profitability breakdown by discount band
 """
 
-import pandas as pd
-from pathlib import Path
 import logging
+from pathlib import Path
+
+import pandas as pd
 
 logger = logging.getLogger(__name__)
 
@@ -194,10 +195,10 @@ def build_all_marts(df: pd.DataFrame) -> dict:
 if __name__ == "__main__":
     import sys
     sys.path.insert(0, str(Path(__file__).resolve().parent))
-    from ingestion import ingest
     from cleaning import clean
-    from transformation import transform
     from feature_engineering import engineer_features
+    from ingestion import ingest
+    from transformation import transform
 
     df = engineer_features(transform(clean(ingest())))
     marts = build_all_marts(df)

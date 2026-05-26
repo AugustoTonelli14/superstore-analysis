@@ -1,0 +1,54 @@
+version: 2
+
+models:
+  - name: sales_performance_mart
+    description: "Monthly sales and profit aggregation"
+    columns:
+      - name: year_month
+        data_tests:
+          - unique
+          - not_null
+      - name: total_sales
+        data_tests:
+          - not_null
+      - name: total_orders
+        data_tests:
+          - not_null
+
+  - name: profitability_mart
+    description: "Product-level profitability analysis"
+    columns:
+      - name: product_name
+        data_tests:
+          - not_null
+      - name: loss_rate_pct
+        data_tests:
+          - not_null
+
+  - name: customer_segment_mart
+    description: "Segment-level KPIs"
+    columns:
+      - name: segment
+        data_tests:
+          - unique
+          - not_null
+      - name: total_customers
+        data_tests:
+          - not_null
+
+  - name: regional_performance_mart
+    description: "Geographic performance breakdown"
+    columns:
+      - name: total_profit
+        data_tests:
+          - not_null
+
+  - name: discount_impact_mart
+    description: "Discount band impact on profitability"
+    columns:
+      - name: discount_band
+        data_tests:
+          - not_null
+      - name: profit_margin_pct
+        data_tests:
+          - not_null

@@ -1,4 +1,0 @@
-Segment,total_sales,total_profit,total_customers,total_orders,avg_discount,loss_orders,profit_margin_pct,avg_revenue_per_customer,loss_rate_pct
-Consumer,1161401.34,134119.21,409,2586,0.1581,1003.0,11.55,2839.61,38.79
-Corporate,706146.37,91979.13,236,1514,0.1582,556.0,13.03,2992.15,36.72
-Home Office,429653.15,60298.68,148,909,0.1471,312.0,14.03,2903.06,34.32

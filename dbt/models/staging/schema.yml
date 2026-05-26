@@ -1,0 +1,70 @@
+version: 2
+
+models:
+  - name: stg_superstore
+    description: "Cleaned and enriched staging layer for Superstore data"
+    columns:
+      - name: row_id
+        description: "Unique row identifier"
+        data_tests:
+          - unique
+          - not_null
+
+      - name: order_id
+        description: "Order identifier (may repeat across line items)"
+        data_tests:
+          - not_null
+
+      - name: order_date
+        data_tests:
+          - not_null
+
+      - name: sales
+        description: "Line-item revenue"
+        data_tests:
+          - not_null
+
+      - name: quantity
+        description: "Units sold"
+        data_tests:
+          - not_null
+
+      - name: profit
+        description: "Line-item profit (can be negative)"
+        data_tests:
+          - not_null
+
+      - name: loss_flag
+        description: "1 if profit < 0, else 0"
+        data_tests:
+          - accepted_values:
+              arguments:
+                values: [0, 1]
+
+      - name: discount_band
+        description: "Categorical bucketing of discount rate"
+        data_tests:
+          - not_null
+          - accepted_values:
+              arguments:
+                values:
+                  - "No Discount"
+                  - "Low (1-19%)"
+                  - "Medium (20-29%)"
+                  - "High (30%+)"
+
+      - name: segment
+        description: "Customer segment"
+        data_tests:
+          - not_null
+          - accepted_values:
+              arguments:
+                values: ["Consumer", "Corporate", "Home Office"]
+
+      - name: region
+        description: "US geographic region"
+        data_tests:
+          - not_null
+          - accepted_values:
+              arguments:
+                values: ["Central", "East", "South", "West"]

@@ -12,19 +12,22 @@ Usage:
 import sys
 from pathlib import Path
 
-import pandas as pd
-import numpy as np
-import streamlit as st
+import duckdb
 import matplotlib.pyplot as plt
 import matplotlib.ticker as mticker
+import pandas as pd
+import streamlit as st
 
 # ── project imports ──────────────────────────────────────────────────
 sys.path.insert(0, str(Path(__file__).resolve().parent / "src"))
-from ingestion import ingest
 from cleaning import clean
-from transformation import transform
 from feature_engineering import engineer_features
-from utils import set_plot_style, PALETTE, fmt_currency, add_currency_formatter
+from ingestion import ingest
+from transformation import transform
+from utils import PALETTE, add_currency_formatter, fmt_currency, set_plot_style
+
+PROJECT_ROOT = Path(__file__).resolve().parent
+DBT_DB_PATH = PROJECT_ROOT / "dbt" / "superstore.duckdb"
 
 # ── page config ──────────────────────────────────────────────────────
 st.set_page_config(
@@ -304,7 +307,131 @@ st.dataframe(
     hide_index=True,
 )
 
+# =====================================================================
+# SECTION 7 — DATA QUALITY
+# =====================================================================
+
+st.subheader("Data Quality Report")
+
+dq_col1, dq_col2, dq_col3 = st.columns(3)
+
+with dq_col1:
+    st.markdown("**Completeness**")
+    null_counts = df.isnull().sum()
+    total_cells = len(df) * len(df.columns)
+    completeness = (1 - null_counts.sum() / total_cells) * 100
+    st.metric("Overall Completeness", f"{completeness:.1f}%")
+    cols_with_nulls = null_counts[null_counts > 0]
+    if len(cols_with_nulls) > 0:
+        st.dataframe(
+            cols_with_nulls.reset_index().rename(columns={"index": "Column", 0: "Nulls"}),
+            hide_index=True,
+        )
+    else:
+        st.success("No missing values detected")
+
+with dq_col2:
+    st.markdown("**Numeric Ranges**")
+    range_checks = pd.DataFrame({
+        "Metric": ["Sales (min)", "Sales (max)", "Profit (min)", "Profit (max)",
+                    "Discount (min)", "Discount (max)", "Quantity (min)", "Quantity (max)"],
+        "Value": [
+            f"${df['Sales'].min():,.2f}",
+            f"${df['Sales'].max():,.2f}",
+            f"${df['Profit'].min():,.2f}",
+            f"${df['Profit'].max():,.2f}",
+            f"{df['Discount'].min():.0%}",
+            f"{df['Discount'].max():.0%}",
+            str(df["Quantity"].min()),
+            str(df["Quantity"].max()),
+        ],
+        "Status": [
+            "Pass" if df["Sales"].min() >= 0 else "Warn",
+            "Pass",
+            "Pass",
+            "Pass",
+            "Pass" if df["Discount"].min() >= 0 else "Warn",
+            "Pass" if df["Discount"].max() <= 1 else "Warn",
+            "Pass" if df["Quantity"].min() >= 1 else "Warn",
+            "Pass",
+        ],
+    })
+    st.dataframe(range_checks, hide_index=True, use_container_width=True)
+
+with dq_col3:
+    st.markdown("**Distribution Checks**")
+    fig, axes = plt.subplots(2, 1, figsize=(6, 5))
+
+    axes[0].hist(df["Sales"], bins=50, color=PALETTE["blue"], alpha=0.7, edgecolor="white")
+    axes[0].set_title("Sales Distribution", fontsize=10)
+    axes[0].axvline(df["Sales"].median(), color=PALETTE["red"], linestyle="--",
+                    label=f"Median: ${df['Sales'].median():,.0f}")
+    axes[0].legend(fontsize=8)
+
+    axes[1].hist(df["Profit"], bins=50, color=PALETTE["green"], alpha=0.7, edgecolor="white")
+    axes[1].set_title("Profit Distribution", fontsize=10)
+    axes[1].axvline(0, color="black", linewidth=1)
+    axes[1].axvline(df["Profit"].median(), color=PALETTE["red"], linestyle="--",
+                    label=f"Median: ${df['Profit'].median():,.0f}")
+    axes[1].legend(fontsize=8)
+
+    plt.tight_layout()
+    st.pyplot(fig, use_container_width=True)
+    plt.close(fig)
+
+st.divider()
+
+# =====================================================================
+# SECTION 8 — dbt MODEL EXPLORER
+# =====================================================================
+
+st.subheader("dbt Model Explorer")
+
+if DBT_DB_PATH.exists():
+    try:
+        con = duckdb.connect(str(DBT_DB_PATH), read_only=True)
+        tables = con.execute(
+            "SELECT table_name FROM information_schema.tables "
+            "WHERE table_schema = 'main' AND table_type = 'BASE TABLE' "
+            "ORDER BY table_name"
+        ).fetchdf()
+
+        if len(tables) > 0:
+            dbt_tab1, dbt_tab2 = st.tabs(["Browse Marts", "Run Custom Query"])
+
+            with dbt_tab1:
+                selected_table = st.selectbox(
+                    "Select a dbt mart to preview",
+                    tables["table_name"].tolist(),
+                )
+                if selected_table:
+                    preview = con.execute(f'SELECT * FROM "{selected_table}" LIMIT 200').fetchdf()
+                    row_count = con.execute(f'SELECT count(*) FROM "{selected_table}"').fetchone()[0]
+                    st.caption(f"Showing up to 200 rows from **{selected_table}** "
+                               f"({row_count:,} total rows)")
+                    st.dataframe(preview, use_container_width=True, hide_index=True)
+
+            with dbt_tab2:
+                query = st.text_area(
+                    "Write a SQL query against the dbt marts",
+                    value="SELECT * FROM sales_performance_mart ORDER BY order_year, order_month LIMIT 50",
+                    height=120,
+                )
+                if st.button("Run Query"):
+                    try:
+                        result = con.execute(query).fetchdf()
+                        st.dataframe(result, use_container_width=True, hide_index=True)
+                        st.caption(f"{len(result):,} rows returned")
+                    except Exception as e:
+                        st.error(f"Query error: {e}")
+
+        con.close()
+    except Exception as e:
+        st.warning(f"Could not connect to dbt database: {e}")
+else:
+    st.info("dbt database not found. Run `make dbt-run` to build the dbt models first.")
+
 # ── footer ───────────────────────────────────────────────────────────
 st.divider()
-st.caption("Superstore Executive Dashboard | Built with Streamlit + matplotlib | "
+st.caption("Superstore Executive Dashboard | Built with Streamlit + matplotlib + dbt | "
            "Data: Sample Superstore 2014-2017")

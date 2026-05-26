@@ -14,5 +14,10 @@ streamlit>=1.30.0
 # SQL layer
 duckdb>=0.10.0
 
-# Testing
+# dbt
+dbt-core>=1.7.0
+dbt-duckdb>=1.7.0
+
+# Testing & quality
 pytest>=7.0.0
+ruff>=0.4.0

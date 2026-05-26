@@ -5,12 +5,10 @@ Shared utility functions used across notebooks and scripts.
 Covers reusable summary helpers, formatting, and chart configuration.
 """
 
-import pandas as pd
-import numpy as np
+
 import matplotlib.pyplot as plt
 import matplotlib.ticker as mticker
-from typing import Optional
-
+import pandas as pd
 
 # ---------------------------------------------------------------------------
 # Plot style configuration

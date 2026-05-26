@@ -1,12 +1,10 @@
 """Tests for the transformation module — time features and shipping lead time."""
 
-import pytest
-import pandas as pd
 import sys
 from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent / "src"))
-from transformation import add_time_features, add_shipping_lead_time
+from transformation import add_shipping_lead_time, add_time_features
 
 
 class TestTimeFeatures:

@@ -7,9 +7,10 @@ Creates derived time-based columns used throughout the analysis:
   - Period label for trend visualisations
 """
 
-import pandas as pd
-from pathlib import Path
 import logging
+from pathlib import Path
+
+import pandas as pd
 
 logger = logging.getLogger(__name__)
 
@@ -67,8 +68,8 @@ def transform(df: pd.DataFrame) -> pd.DataFrame:
 if __name__ == "__main__":
     import sys
     sys.path.insert(0, str(Path(__file__).resolve().parent))
-    from ingestion import ingest
     from cleaning import clean
+    from ingestion import ingest
     raw = ingest()
     cleaned = clean(raw)
     transformed = transform(cleaned)

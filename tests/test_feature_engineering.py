@@ -1,18 +1,16 @@
 """Tests for feature engineering — business metrics and flags."""
 
-import pytest
-import numpy as np
 import sys
 from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent / "src"))
 from feature_engineering import (
-    add_profit_margin,
     add_discount_band,
-    add_loss_flag,
     add_high_discount_flag,
-    add_revenue_per_unit,
+    add_loss_flag,
+    add_profit_margin,
     add_profit_per_unit,
+    add_revenue_per_unit,
 )
 
 

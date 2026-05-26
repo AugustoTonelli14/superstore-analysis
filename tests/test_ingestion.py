@@ -1,12 +1,12 @@
 """Tests for the ingestion module — schema validation and data loading."""
 
-import pytest
-import pandas as pd
 import sys
 from pathlib import Path
 
+import pytest
+
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent / "src"))
-from ingestion import validate_schema, EXPECTED_COLUMNS
+from ingestion import EXPECTED_COLUMNS, validate_schema
 
 
 class TestSchemaValidation:

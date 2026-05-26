@@ -15,8 +15,8 @@ import logging
 import sys
 from pathlib import Path
 
-import pandas as pd
 import duckdb
+import pandas as pd
 
 logging.basicConfig(
     level=logging.INFO,
